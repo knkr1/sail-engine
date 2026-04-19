@@ -40,6 +40,13 @@ struct Part : public SceneObject
         material->getShader()->setMat4("view", view);
         material->getShader()->setMat4("projection", projection);
 
+        if(material->materialTexture != nullptr){
+            material->getShader()->setBool("useTexture", true);
+        }
+        else{
+            material->getShader()->setBool("useTexture", false);
+        }
+
         float shaderColor[3] = {lightData.colors.at(0).x, lightData.colors.at(0).y, lightData.colors.at(0).z};
         material->getShader()->setVec3("lightColor", shaderColor);
         float shaderPosition[3] = {lightData.positions.at(0).x, lightData.positions.at(0).y, lightData.positions.at(0).z};
@@ -47,7 +54,7 @@ struct Part : public SceneObject
 
         float viewPos[3] = {camera->Position.x, camera->Position.y, camera->Position.z};
         material->getShader()->setVec3("viewPos", viewPos);
-        
+
         //Bind cube buffer
         mesh->bind();
         //Draw

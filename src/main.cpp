@@ -48,8 +48,8 @@ int main(){
 
     //Light Object
     Shader lightShaderProgram("shaders/lightingVertexShader.glsl", "shaders/lightingFragmentShader.glsl");
-    Texture lightTexture("assets/deima.png", 0);
-    Material lightMaterial(&lightShaderProgram, &lightTexture);
+    //Texture lightTexture("assets/deima.png", 0);
+    Material lightMaterial(&lightShaderProgram);
     Part lightPart(lightMaterial);
     //So we know this is a lighting component
     lightPart.light = new LightComponent();

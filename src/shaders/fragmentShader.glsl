@@ -6,6 +6,7 @@ in vec3 FragPos;
 out vec4 FragColor;
 
 uniform sampler2D texture1;
+uniform bool useTexture;
 
 uniform vec4 objectColor;
 uniform vec3 lightColor;
@@ -32,5 +33,5 @@ void main()
     vec3 specular = specularStrength * spec * lightColor;  
 
     vec3 result = (ambient + diffuse + specular) * objectColor.xyz;
-    FragColor = texture(texture1, vec2(TexCoord.x, -TexCoord.y)) * vec4(result, 1.0);;
+    FragColor = vec4(result, 1.0) * (useTexture ? texture(texture1, TexCoord) : vec4(1.0));
 }
