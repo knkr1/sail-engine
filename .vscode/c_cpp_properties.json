@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/core/resources",
+                "${workspaceFolder}/src/core/resources/color",
+                "${workspaceFolder}/src/core/resources/material",
+                "${workspaceFolder}/src/core/resources/mesh",
+                "${workspaceFolder}/src/core/resources/texture",
+                "${workspaceFolder}/src/core",
+                "${workspaceFolder}/src/game",
+                "${workspaceFolder}/src/game/camera",
+                "${workspaceFolder}/src/game/part",
+                "${workspaceFolder}/src/render",
+                "${workspaceFolder}/src/render/renderer",
+                "${workspaceFolder}/src/render/shader",
+                "${workspaceFolder}/src/libraries",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/**"
+            ],
+            "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}
