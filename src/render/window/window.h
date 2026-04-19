@@ -34,7 +34,7 @@ class Window
             mode = glfwGetVideoMode(monitor);
 
             windowElement = glfwCreateWindow(width, height, title, NULL, NULL);
-            glfwSetWindowPos(windowElement, width/2 , height/2);
+            glfwSetWindowPos(windowElement, (mode->width-width)/2 , (mode->height-height)/2);
             if (windowElement == NULL)
             {
                 std::cout << "Failed to create GLFW window" << std::endl;

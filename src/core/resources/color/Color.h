@@ -4,9 +4,15 @@
 #include <algorithm>
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "render/shader/shader.h"
+
 struct Color{
 
-    float colorData[4] = {1,1,1,1};
+    glm::vec4 colorData;
     Color(float r=1,float g=1, float b = 1, float a= 1)
     {
         //long ass way to check if values are between 0 and 1 (sorry)
@@ -15,7 +21,7 @@ struct Color{
             r=1;g=1;b=1;a=1;
         }
 
-        colorData[0] = r; colorData[1] = g; colorData[2] = b; colorData[3] = a;
+        colorData = glm::vec4(r, g, b, a);
     }
     void fromRGB(float r,float g, float b, float a = 255)
     {
@@ -25,10 +31,10 @@ struct Color{
         colorData[3] = a/255.0f;
     }
     float* getValues() {
-        return colorData;
+        return glm::value_ptr(colorData);
     }
     void applyToShader(Shader* shader){
-        shader->setFloat4("uColor", colorData);
+        shader->setVec4("objectColor", getValues());
     }
 
 };

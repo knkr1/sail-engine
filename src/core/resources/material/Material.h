@@ -10,19 +10,22 @@ class Material
         Shader* materialShader;
         Color materialColor;
         Texture* materialTexture;
-        Material(Shader& shader, Texture& texture)
+
+        Material(Shader* shader, Texture* texture = nullptr)
         {
-            materialShader = &shader;
+            materialShader = shader;
             materialColor = Color();
-            materialTexture = &texture;
+            materialTexture = texture;
         }
         void use()
         {
             materialShader->use();
-            materialTexture->use();
-            materialShader->setFloat4("uColor",materialColor.getValues());
+            materialColor.applyToShader(materialShader);
+            
+            if(materialTexture != nullptr)
+                materialTexture->use();
         }
-        Shader* getShader()
+        Shader* getShader() 
         {
             return materialShader;
         }
