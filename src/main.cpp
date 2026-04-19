@@ -26,18 +26,26 @@ int main(){
     window.setupCallbacks(&camera);
 
     Renderer renderer(&window, &camera);
+
     Shader shaderProgram1("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
-    Texture texture("assets/bjt.jpg", 0);
-    Material material1(shaderProgram1,texture);
-    material1.materialColor.fromRGB(255,255,255);
+    Texture texture1("assets/bjt.jpg", 0);
+    Material material1(shaderProgram1,texture1);
 
     Part part1(material1);
     part1.setPosition(0,0,-3);
 
-    Part part2(material1);
+    Shader shaderProgram2("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
+    Texture texture2("assets/bjt.jpg", 0);
+    Material material2(shaderProgram2,texture2);
+
+    Part part2(material2);
     part2.setPosition(-1.5,0,-3);
 
-    Part part3(material1);
+    Shader shaderProgram3("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
+    Texture texture3("assets/bjt.jpg", 0);
+    Material material3(shaderProgram3,texture3);
+
+    Part part3(material3);
     part3.setPosition(1.5,0,-3);
 
     renderer.addPart(&part1);

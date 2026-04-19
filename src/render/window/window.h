@@ -38,10 +38,14 @@ class Window
             if (windowElement == NULL)
             {
                 std::cout << "Failed to create GLFW window" << std::endl;
-                glfwTerminate();
+                glfwTerminate();glfwSwapInterval(1);
                 assert(false && "Failed to create GLFW window");
             }
             glfwMakeContextCurrent(windowElement);
+
+            //VSYNC fix
+            glfwSwapInterval(1);
+
             if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
             {
                 std::cout << "Failed to initialize GLAD" << std::endl;
