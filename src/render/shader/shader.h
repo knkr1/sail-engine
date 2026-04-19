@@ -17,8 +17,10 @@ class Shader
 {
 public:
     unsigned int ID;
+    char* vertexPath;
+    char* fragmentPath;    
 
-    Shader(const char* vertexPath, const char* fragmentPath)
+    Shader(const char* vertexPath, const char* fragmentPath): vertexPath((char*)vertexPath), fragmentPath((char*)fragmentPath)
     {
        
         std::string vertexCode;
@@ -48,9 +50,12 @@ public:
         {
             std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
         }
+
+        //Raw Shader Strings
         const char* vShaderCode = vertexCode.c_str();
         const char * fShaderCode = fragmentCode.c_str();
         
+        //Creating Part
         unsigned int vertex, fragment;
         
         vertex = glCreateShader(GL_VERTEX_SHADER);
@@ -71,6 +76,15 @@ public:
        
         glDeleteShader(vertex);
         glDeleteShader(fragment);
+    }
+
+    void UpdateShader(char* vertexPath, char* fragmentPath)
+    {
+        this->vertexPath = vertexPath;
+        this->fragmentPath = fragmentPath;
+        glDeleteProgram(ID);
+        Shader newShader(vertexPath, fragmentPath);
+        ID = newShader.ID;
     }
     
     void use() 

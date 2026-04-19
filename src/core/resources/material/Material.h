@@ -20,7 +20,7 @@ class Material
         {
             materialShader->use();
             materialTexture->use();
-            materialShader->setFloat4("uColor",materialColor.getValues().data());
+            materialShader->setFloat4("uColor",materialColor.getValues());
         }
         Shader* getShader()
         {

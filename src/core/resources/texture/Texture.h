@@ -5,13 +5,16 @@
 #include <iostream>
 #include "libraries/stb_image.h"
 
-class Texture
+struct Texture
 {
-    public:
-        Texture(const char* path, unsigned int textureSlot);
-        void use(bool isCustomSlot = false, int customSlot = 0);
+    unsigned char* data;
+    int width, height, nrChannels;
+    unsigned char* directory;
 
-    private:
-        unsigned int textureID;
-        unsigned int slot;
+    unsigned int textureID;
+    unsigned int slot;
+
+    Texture(const char* path, unsigned int textureSlot);
+    void use(bool isCustomSlot = false, int customSlot = 0);
+    void ChangeTexture(const char* path, unsigned int textureSlot);
 };

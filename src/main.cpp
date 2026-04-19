@@ -19,11 +19,13 @@
 
 int main(){
     
-    Window window(800, 600, "Sail Engine");
-    
+    Window window(1280, 720, "Sail Engine", true);
     Camera camera;
-    Renderer renderer(&window, &camera);
+    
+    //Setup callbacks after ImGui_Init to prevent blocking of ImGui
     window.setupCallbacks(&camera);
+
+    Renderer renderer(&window, &camera);
     Shader shaderProgram1("shaders/vertexShader.glsl", "shaders/fragmentShader.glsl");
     Texture texture("assets/bjt.jpg", 0);
     Material material1(shaderProgram1,texture);
@@ -32,13 +34,24 @@ int main(){
     Part part1(material1);
     part1.setPosition(0,0,-3);
 
+    Part part2(material1);
+    part2.setPosition(-1.5,0,-3);
+
+    Part part3(material1);
+    part3.setPosition(1.5,0,-3);
+
     renderer.addPart(&part1);
+    renderer.addPart(&part2);
+    renderer.addPart(&part3);
     while(!window.shouldClose())
     {
-        renderer.clearWindow();
+        renderer.BeforeRender();
         renderer.RenderLoop();
+        renderer.AfterRender();
+
         window.windowLoopEnd();
     }
+    renderer.RenderCleanup();
 
     return 0;
 }

@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
+#include "core/events/EventSystem.h"
+
 #define LOG(x) std::cout << x << std::endl
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -23,6 +25,8 @@ const float PITCH       =  0.0f;
 const float SPEED       =  2.5f;
 const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
+
+
 
 
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
@@ -51,6 +55,8 @@ public:
         Yaw = yaw;
         Pitch = pitch;
 
+        initializeEvents();
+
         updateCameraVectors();
     }
     // constructor with scalar values
@@ -60,6 +66,9 @@ public:
         WorldUp = glm::vec3(upX, upY, upZ);
         Yaw = yaw;
         Pitch = pitch;
+
+        initializeEvents();
+
         updateCameraVectors();
     }
 
@@ -87,11 +96,17 @@ public:
     void ProcessMouseMovement(GLFWwindow* window, double xposIn, double yposIn, GLboolean constrainPitch = true)
     {
 
+        if(!cursorLocked){
+            return;
+        }
+
+
         float xpos = static_cast<float>(xposIn);
         float ypos = static_cast<float>(yposIn);
 
         if (firstMouse)
         {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             lastX = xpos;
             lastY = ypos;
             firstMouse = false;
@@ -128,8 +143,8 @@ public:
         Zoom -= (float)yoffset;
         if (Zoom < 1.0f)
             Zoom = 1.0f;
-        if (Zoom > 45.0f)
-            Zoom = 45.0f;
+        if (Zoom > 90.0f)
+            Zoom = 90.0f;
     }
 
 private:
@@ -150,5 +165,21 @@ private:
     float lastX = 800 / 2.0f;
     float lastY = 600 / 2.0f;
     bool firstMouse = true;
+
+    bool cursorLocked = true;
+
+    void initializeEvents()
+    {
+        EventSystem::on("toggleCursor", [this](){
+            cursorLocked = !cursorLocked;
+            if(cursorLocked){
+                firstMouse = true;
+                glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
+            else{
+                glfwSetInputMode(glfwGetCurrentContext(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+        });
+    }
 };
 #endif
