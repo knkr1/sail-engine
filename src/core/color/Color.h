@@ -13,7 +13,6 @@ struct Color
     {
         color = glm::vec4(a,b,c,d);
     }
-
     static Color fromRGB(uint16_t  R, uint16_t  G, uint16_t  B)
     {
         return Color(R/255.0f,G/255.0f,B/255.0f,1.0f);
