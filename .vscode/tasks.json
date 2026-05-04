@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "xmake",
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "xmake run",
+            "dependsOn": "Build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
