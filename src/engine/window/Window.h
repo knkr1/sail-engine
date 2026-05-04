@@ -10,11 +10,25 @@
 #include "libraries/sailUtil.h"
 #include "core/event/Event.h"
 
+enum windowMode
+{
+    FULLSCREEN,
+    BORDERLESS,
+    MAXIMIZED,
+    WINDOWED,
+    MINIMIZED,
+};
+
 class Window
 {
     public:
         std::string windowTitle;    
         unsigned int width,height;
+
+        int prevX, prevY, prevWidth, prevHeight;
+
+        windowMode currentWindowMode = MAXIMIZED;
+        windowMode windowModeBeforeFullscreen = MAXIMIZED;
 
         GLFWwindow* windowObject;
         GLFWmonitor* monitor;
@@ -84,6 +98,7 @@ class Window
                 std::abort();
             }    
             glEnable(GL_DEPTH_TEST);  
+            setWindowMode(currentWindowMode);
         }
 
         void toggleCaptureMouse()
@@ -100,6 +115,43 @@ class Window
             }
             
         }
+
+        void setWindowMode(windowMode mode)
+        {
+            currentWindowMode = mode;
+            const GLFWvidmode* vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+            if(mode == FULLSCREEN)
+            {
+                glfwGetWindowPos(windowObject, &prevX, &prevY);
+                glfwGetWindowSize(windowObject, &prevWidth, &prevHeight);
+
+                glfwSetWindowMonitor(windowObject, glfwGetPrimaryMonitor(), 0, 0, vidmode->width, vidmode->height, vidmode->refreshRate);
+            }
+            else if(mode == BORDERLESS)
+            {
+                glfwGetWindowPos(windowObject, &prevX, &prevY);
+                glfwGetWindowSize(windowObject, &prevWidth, &prevHeight);
+
+                glfwSetWindowAttrib(windowObject, GLFW_DECORATED, GLFW_FALSE);
+                glfwSetWindowSize(windowObject, vidmode->width, vidmode->height);
+                glfwSetWindowPos(windowObject, 0, 0);
+            }
+            else if(mode == MAXIMIZED)
+            {
+                glfwMaximizeWindow(windowObject);
+            }
+            else if(mode == MINIMIZED)
+            {
+                glfwIconifyWindow(windowObject);
+            }
+            else if(mode == WINDOWED)
+            {
+                glfwSetWindowAttrib(windowObject, GLFW_DECORATED, GLFW_TRUE);
+                glfwSetWindowMonitor(windowObject, nullptr, prevX, prevY, prevWidth, prevHeight, 0);
+            }
+        }
+        
 
         void terminate()
         {
