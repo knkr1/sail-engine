@@ -21,7 +21,7 @@ class Object
         glm::mat4 model;
 
         Color objectColor;
-        Texture* texture;
+        Texture* texture = nullptr;
         Mesh* mesh;
         Shader* shader;
 

@@ -10,6 +10,8 @@
 #include "engine/window/Window.h"
 #include "core/event/Event.h"
 
+class Render;
+
 class Camera
 {
     public:
@@ -27,6 +29,8 @@ class Camera
         float pitch = 0;
         float cameraSpeed = 1;
 
+        float fov = 45.0f;
+
 
 
         bool firstCapture = true;
@@ -38,6 +42,11 @@ class Camera
         glm::mat4 getViewMatrix()
         {
             return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        }
+
+        glm::mat4 getProjectionMatrix(Window& window)
+        {
+            return glm::perspective(glm::radians(fov),(float)window.width/(float)window.height,0.1f,100.0f);
         }
 
 

@@ -12,6 +12,8 @@
 #include "engine/ui/UI.h"
 #include "engine/ui/presets/demoUI.h"
 
+//Temporary for Lighting Chapter
+
 class Render
 {
     public:
@@ -25,10 +27,15 @@ class Render
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;
 
+
+        //Temporary for lighting chapter
+        Object* sun;
+
         //Game values(?)
 
         float ambientStrength = 0.1;
-        glm::vec3 worldLightColor = glm::vec3(1.0f);
+        Color gameColor = Color::fromRGB(51, 77, 77);
+        Color worldLightColor = Color::fromRGB(255,255,255);
 
         //TEMPORARY
         glm::mat4 projection;
@@ -42,21 +49,43 @@ class Render
         void RenderObject(Object* obj)
         {
             obj->shader->bind();    
-            obj->updateModelMatrix();
-            obj->shader->setMat4("model",obj->model);
-            obj->shader->setMat4("view",camera.getViewMatrix());
-            
-            obj->shader->setMat4("projection",projection);
-
-            obj->texture->bind();
-            obj->shader->setInt("texture1",0);
-
-            //Light stuff
-            obj->shader->setFloat("color",glm::vec4(1.0f));
     
-            obj->shader->setFloat("ambientStrength",ambientStrength);
-            obj->shader->setFloat("worldLightColor",worldLightColor);
-            
+            // Texture defaults
+            obj->shader->setBool("hasTexture", false);
+            obj->shader->setInt("texture1", 0);
+
+            // Light defaults
+            obj->shader->setBool("hasLight", false);
+            obj->shader->setFloat("lightColor", glm::vec3(1.0f));
+            obj->shader->setFloat("lightPosition", glm::vec3(0.0f));
+
+            // Matrices
+            obj->updateModelMatrix();
+            obj->shader->setMat4("model", obj->model);
+            obj->shader->setMat4("view", camera.getViewMatrix());
+            obj->shader->setMat4("projection", projection);
+
+            //Color
+            obj->shader->setFloat("color", obj->objectColor.color);
+
+            //Ambient
+            obj->shader->setFloat("ambientStrength", ambientStrength);
+            obj->shader->setFloat("worldLightColor", glm::vec3(worldLightColor.color));
+
+            // Override with actual values
+            if(obj->texture != nullptr)
+            {
+                obj->texture->bind();
+                obj->shader->setBool("hasTexture", true);
+            }
+
+            if(sun != nullptr)
+            {
+                obj->shader->setBool("hasLight", true);
+                obj->shader->setFloat("lightColor", glm::vec3(sun->objectColor.color));
+                obj->shader->setFloat("lightPosition", sun->position);
+            }
+
             obj->draw();
         }
 
@@ -91,12 +120,13 @@ class Render
 
                 game->onUpdate();
 
-                glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+                Color tempGameColor = gameColor;
+                tempGameColor.color *= glm::vec4(worldLightColor.color.x,worldLightColor.color.y,worldLightColor.color.z,1.0f);
+                glClearColor(tempGameColor.color.x,tempGameColor.color.y,tempGameColor.color.z,tempGameColor.color.w);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-                //temporarly I decided to update projection from here because it needs constant update (aspect ratio/fov)
-                projection = glm::perspective(glm::radians(45.0f),(float)window.width/(float)window.height,0.1f,100.0f);
+                projection = camera.getProjectionMatrix(window);
                 for(int i=0;i<game->objectArray.size();i++)
                 {
                     RenderObject(game->objectArray.at(i));

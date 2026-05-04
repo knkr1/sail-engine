@@ -13,10 +13,14 @@ class testGame : public Game
     public:
         Texture* texture;
         Shader* shader;
-        Block* part1;
         Render* render;
 
         Event<> toggleMouseCapture; 
+
+        Block* part1;
+
+        Shader* sunShader;
+        Block* sun;
 
         void onStart(Render* renderObject) override {
             render = renderObject;
@@ -26,6 +30,16 @@ class testGame : public Game
 
             part1->position = glm::vec3(0, 0, -3);
             objectArray.push_back(part1);
+
+            //Sun
+            sunShader = new Shader("shaders/vertexShader.glsl","shaders/lightFragmentShader.glsl");
+
+            sun = new Block(Shapes::cube,nullptr,sunShader);
+            sun->objectColor = Color::fromRGB(255,255,255);
+            sun->position = glm::vec3(0, 2, -4);
+            sun->scale = glm::vec3(0.3f);
+            renderObject->sun = sun;
+            objectArray.push_back(sun);
         }
 
         void onUpdate() override {
@@ -54,6 +68,16 @@ class testGame : public Game
             }
             if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) { 
                 glfwSetWindowShouldClose(w, true);
+            }
+             if(key == GLFW_KEY_F11 && action == GLFW_PRESS) { 
+                if(render->window.currentWindowMode == MINIMIZED || render->window.currentWindowMode == MAXIMIZED)
+                {
+                    render->window.windowModeBeforeFullscreen == render->window.currentWindowMode;
+                    render->window.setWindowMode(FULLSCREEN);
+                }
+                else{
+                    render->window.setWindowMode(render->window.windowModeBeforeFullscreen);
+                }
             }
         }
     private:
