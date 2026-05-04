@@ -34,6 +34,9 @@ class Renderer{
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;
 
+        float gifLastFrame = 0.0f;
+
+
         Renderer(Window* window, Camera* camera);
 
         void BeforeRender()

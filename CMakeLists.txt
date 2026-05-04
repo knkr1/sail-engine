@@ -25,3 +25,9 @@ find_package(glm REQUIRED)
 target_link_libraries(program PRIVATE glfw glm::glm opengl32 dwmapi)
 
 target_sources(program PRIVATE src/glad.c)
+
+add_custom_target(run
+  COMMAND program
+  DEPENDS program
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

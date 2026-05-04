@@ -1,7 +1,8 @@
 #pragma once
 
-class Lighting
+namespace Lighting
 {
-    public:
-       
-};
+    float ambientStrength = 0.1f;
+    float diffuseStrength = 1.0f;
+    float specularStrength = 0.5f;
+}

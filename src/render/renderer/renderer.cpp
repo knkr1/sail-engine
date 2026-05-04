@@ -29,25 +29,19 @@ void Renderer::RenderLoop()
     glm::mat4 view = camera->GetViewMatrix();
     glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)window->width / (float)window->height, 0.1f, 100.0f);
     
-    //Calculate Light Data
-    //TODO: READ ALL OBJECTS TO GET LIGHT ONES
-    LightData lightData;
-    if(lightObject != nullptr){
-        lightData.positions.push_back(lightObject->position);
-        lightData.colors.push_back(lightObject->getMaterial()->materialColor.colorData);
-    }
-    else{
-        assert(false && "No light object set in the renderer.");
-    }
-    
     float currentTime = glfwGetTime();
 
-    //Render
-    //lightObject->position[0] = 2.0f * sin(currentTime);
-    lightObject->render(view, projection, camera, lightData);
     for(SceneObject* obj : sceneObjects)
     {
-        obj->render(view, projection, camera, lightData);
+        Texture* tex = obj->getMaterial()->materialTexture;
+        if(tex->isTextureGif)
+        {
+            if(currentFrame - gifLastFrame > tex->frameDelay){
+                gifLastFrame = currentFrame;
+                tex->incrementFrame();
+            }
+        }
+        obj->render(view, projection, camera);
     }
 
     //ImGui End of the Loop

@@ -27,7 +27,7 @@ struct Part : public SceneObject
         rotation = glm::vec3(0);
         updateModel();
     };
-    void render(glm::mat4& view, glm::mat4& projection, Camera* camera, LightData& lightData) override
+    void render(glm::mat4& view, glm::mat4& projection, Camera* camera) override
     {
         //Update model matrix
         updateModel();
@@ -46,11 +46,6 @@ struct Part : public SceneObject
         else{
             material->getShader()->setBool("useTexture", false);
         }
-
-        float shaderColor[3] = {lightData.colors.at(0).x, lightData.colors.at(0).y, lightData.colors.at(0).z};
-        material->getShader()->setVec3("lightColor", shaderColor);
-        float shaderPosition[3] = {lightData.positions.at(0).x, lightData.positions.at(0).y, lightData.positions.at(0).z};
-        material->getShader()->setVec3("lightPos", shaderPosition);
 
         float viewPos[3] = {camera->Position.x, camera->Position.y, camera->Position.z};
         material->getShader()->setVec3("viewPos", viewPos);
